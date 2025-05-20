@@ -1,0 +1,10 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+
+No need to import vue directives or components.
+We are using Vue 3 Script Setup with Typescript.
+Dont import shadcn components, it will be automatically imported.
+Only add comments if you are sure they are needed.

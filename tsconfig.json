@@ -1,0 +1,14 @@
+{
+  // https://nuxt.com/docs/guide/concepts/typescript
+  "extends": "./.nuxt/tsconfig.json",
+  "compilerOptions": {
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "strict": true,
+    "types": ["@nuxt/types", "node"],
+    "skipLibCheck": true,
+    "baseUrl": "."
+  },
+  "exclude": ["**/dist/**", "**/node_modules/**"]
+}

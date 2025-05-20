@@ -1,0 +1,14 @@
+.env
+.env.local
+.env.development
+.env.production
+.env.test
+.env.test.local
+.env.test.local
+
+node_modules
+.nuxt
+.output
+.DS_Store
+.idea
+.vscode
