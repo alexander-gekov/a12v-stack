@@ -19,6 +19,9 @@ export default defineNuxtConfig({
     stripePriceId: process.env.STRIPE_PRICE_ID,
     stripePriceIdTeam: process.env.STRIPE_PRICE_ID_TEAM,
     stripeCouponId: process.env.STRIPE_COUPON_ID,
+    polarAccessToken: process.env.POLAR_ACCESS_TOKEN,
+    polarCheckoutSuccessUrl: process.env.POLAR_SUCCESS_URL,
+    polarServer: process.env.POLAR_SERVER,
   },
   modules: [
     "shadcn-nuxt",
@@ -29,6 +32,7 @@ export default defineNuxtConfig({
     "@nuxtjs/color-mode",
     "@nuxtjs/supabase",
     "@prisma/nuxt",
+    "@polar-sh/nuxt",
   ],
 
   colorMode: {

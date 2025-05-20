@@ -16,7 +16,7 @@
         <Breadcrumbs />
         <div class="flex items-center flex-1 justify-end gap-2">
           <ColorModeSwitch />
-          <UserButton afterSignOutUrl="/login" />
+          <UserButton afterSignOutUrl="/auth/login" />
         </div>
       </div>
     </div>

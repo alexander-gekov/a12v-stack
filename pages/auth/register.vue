@@ -2,6 +2,7 @@
 import logo from "@/assets/images/logo.png";
 
 definePageMeta({
+  name: "auth-register",
   layout: "login",
 });
 </script>
@@ -16,11 +17,9 @@ definePageMeta({
     <!-- Right section: login form -->
     <div class="w-1/2 h-screen flex items-center justify-center bg-white">
       <div class="w-full max-w-md p-12 flex flex-col justify-center">
-        <h1 class="text-2xl font-semibold mb-2 text-black">
-          Sign in to your account
-        </h1>
+        <h1 class="text-2xl font-semibold mb-2 text-black">Sign up</h1>
         <slot name="form">
-          <SignIn />
+          <SignUp />
         </slot>
       </div>
     </div>

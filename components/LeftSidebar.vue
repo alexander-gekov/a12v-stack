@@ -59,9 +59,6 @@
     <SidebarFooter>
       <SidebarMenu>
         <SidebarMenuItem>
-          <GettingStartedSidebar />
-        </SidebarMenuItem>
-        <SidebarMenuItem>
           <NuxtLink :to="supportLink">
             <SidebarMenuButton class="w-full text-primary">
               <LucideHelpCircle stroke-width="1" class="mr-2 h-4 w-4" />
@@ -70,10 +67,15 @@
           </NuxtLink>
         </SidebarMenuItem>
         <SidebarMenuItem>
+          <Button variant="outline" size="sm" @click="openPolarCheckout">
+            <span>Subscribe</span>
+          </Button>
+        </SidebarMenuItem>
+        <SidebarMenuItem>
           <DropdownMenu>
             <DropdownMenuTrigger as-child>
               <SidebarMenuButton size="lg">
-                <UserButton afterSignOutUrl="/login" />
+                <UserButton afterSignOutUrl="/auth/login" />
                 <div class="grid flex-1 text-left text-sm leading-tight">
                   <span class="truncate font-semibold">
                     {{ user?.fullName ?? user?.primaryEmailAddress }}
@@ -91,14 +93,15 @@
 </template>
 
 <script lang="ts" setup>
-import logo from '~/assets/images/logo.png';
+import logo from "~/assets/images/logo.png";
 import {
   LucideHelpCircle,
   LucideSettings,
   LucideHome,
   LucideFolders,
-} from 'lucide-vue-next';
-import { useSidebar } from './ui/sidebar';
+} from "lucide-vue-next";
+import { useSidebar } from "./ui/sidebar";
+import type { ProductRead, CheckoutSessionRead } from "@polar-sh/sdk";
 
 const { user } = useUser();
 const { userId } = useAuth();
@@ -112,31 +115,68 @@ watch(
   () => userId.value,
   () => {
     if (userId.value === null) {
-      navigateTo('/login');
+      navigateTo("auth/login");
     }
   }
 );
 
 // Navigation items data
-const supportLink = ref('/support/how-to-build-a-search-for-candidates');
+const supportLink = ref("/support");
 
 const navigationItems = [
   {
-    path: '/',
-    label: 'Home',
+    path: "/",
+    label: "Home",
     icon: LucideHome,
   },
   {
-    path: '/projects',
-    label: 'Projects',
+    path: "/items",
+    label: "Items",
     icon: LucideFolders,
   },
   {
-    path: '/settings',
-    label: 'Settings',
+    path: "/settings",
+    label: "Settings",
     icon: LucideSettings,
   },
 ];
+
+interface PolarProductsResponse {
+  result: {
+    items: ProductRead[];
+  };
+}
+
+interface PolarCheckoutResponse {
+  url: string;
+}
+
+const { data: products } = await useFetch<PolarProductsResponse>(
+  "/api/polar/products"
+);
+
+const openPolarCheckout = async () => {
+  try {
+    if (!products.value?.result.items.length) {
+      return;
+    }
+
+    const productId = products.value.result.items[0].id;
+    const checkout = await $fetch<PolarCheckoutResponse>(
+      "/api/polar/checkout",
+      {
+        method: "POST",
+        body: { productId },
+      }
+    );
+
+    if (checkout?.url) {
+      window.location.href = checkout.url;
+    }
+  } catch (error) {
+    console.error("Failed to open checkout:", error);
+  }
+};
 </script>
 
 <style scoped></style>

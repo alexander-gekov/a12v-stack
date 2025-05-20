@@ -24,17 +24,17 @@
 </template>
 
 <script setup lang="ts">
-import LeftSidebar from '../components/LeftSidebar.vue';
-import { SidebarProvider, SidebarInset } from '../components/ui/sidebar';
+import LeftSidebar from "../components/LeftSidebar.vue";
+import { SidebarProvider, SidebarInset } from "../components/ui/sidebar";
 
 const { userId } = useAuth();
-const isLargeScreen = useMediaQuery('(min-width: 800px)');
+const isLargeScreen = useMediaQuery("(min-width: 800px)");
 
 watch(
   () => userId.value,
   async () => {
     if (userId.value === null) {
-      navigateTo('/login');
+      navigateTo("/auth/login");
     }
   }
 );

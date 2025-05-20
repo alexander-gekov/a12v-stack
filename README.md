@@ -59,6 +59,14 @@ For integrating Supabase with Clerk, follow the official guide:
 
 ---
 
+## 📦 Polar.sh Setup
+
+- Usage-Based Pricing
+
+👉 [Polar.sh Usage-Based Pricing](https://docs.polar.sh/features/usage-based-billing/introduction)
+
+---
+
 <div align="center">
   <sub>Made with ❤️ by A12V - AlexanderGekov</sub>
 </div>

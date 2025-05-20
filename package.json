@@ -18,6 +18,8 @@
     "@nuxtjs/color-mode": "3.5.2",
     "@nuxtjs/supabase": "^1.5.0",
     "@pinia/nuxt": "^0.11.0",
+    "@polar-sh/nuxt": "^0.3.1",
+    "@polar-sh/sdk": "^0.32.15",
     "@prisma/client": "^6.8.2",
     "@prisma/nuxt": "^0.3.0",
     "@tailwindcss/vite": "^4.1.7",
