@@ -59,16 +59,15 @@
     <SidebarFooter>
       <SidebarMenu>
         <SidebarMenuItem>
-          <NuxtLink :to="supportLink">
-            <SidebarMenuButton class="w-full text-primary">
-              <LucideHelpCircle stroke-width="1" class="mr-2 h-4 w-4" />
-              <span>Help</span>
-            </SidebarMenuButton>
-          </NuxtLink>
-        </SidebarMenuItem>
-        <SidebarMenuItem>
-          <Button variant="outline" size="sm" @click="openPolarCheckout">
-            <span>Subscribe</span>
+          <Button
+            variant="outline"
+            size="sm"
+            @click="openPolarCheckout"
+            class="w-full flex items-center justify-center gap-2"
+            :class="{ 'aspect-square p-2': !open }"
+          >
+            <LucideStar class="h-4 w-4" />
+            <span v-if="open">Subscribe</span>
           </Button>
         </SidebarMenuItem>
         <SidebarMenuItem>
@@ -95,16 +94,15 @@
 <script lang="ts" setup>
 import logo from "~/assets/images/logo.png";
 import {
-  LucideHelpCircle,
   LucideSettings,
   LucideHome,
   LucideFolders,
+  LucideStar,
 } from "lucide-vue-next";
 import { useSidebar } from "./ui/sidebar";
-import type { ProductRead, CheckoutSessionRead } from "@polar-sh/sdk";
 
 const { user } = useUser();
-const { userId } = useAuth();
+const { userId, isSignedIn } = useAuth();
 
 const router = useRouter();
 const config = useRuntimeConfig();
@@ -143,7 +141,7 @@ const navigationItems = [
 
 interface PolarProductsResponse {
   result: {
-    items: ProductRead[];
+    items: any[];
   };
 }
 

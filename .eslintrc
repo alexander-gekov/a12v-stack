@@ -2,6 +2,13 @@
   "extends": ["prettier"],
   "plugins": ["prettier"],
   "rules": {
-    "prettier/prettier": ["error"]
+    "prettier/prettier": ["error"],
+    "no-undef": 1,
+    "no-undef-init": 1,
+    "no-unused-imports": 1,
+    "no-unused-expressions": 1,
+    "no-unused-labels": 1,
+    "no-unused-params": 1,
+    "no-unused-vars": 1
   }
 }
