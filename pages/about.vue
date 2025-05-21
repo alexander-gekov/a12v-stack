@@ -14,7 +14,7 @@ const socialLinks = [
   },
   {
     name: "LinkedIn",
-    url: "https://linkedin.com/in/aleksandar-gekov-b43ba919a",
+    url: "https://linkedin.com/in/alexander-gekov",
     icon: LucideLinkedin,
   },
   {
