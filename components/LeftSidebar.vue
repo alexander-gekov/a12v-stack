@@ -20,7 +20,7 @@
                 alt="Logo"
               />
             </div>
-            <div v-if="open" class="font-semibold font-mono">
+            <div v-if="open" class="font-semibold font-mono text-sm">
               {{ config.public.appName }}
             </div>
           </NuxtLink>
@@ -67,22 +67,90 @@
             :class="{ 'aspect-square p-2': !open }"
           >
             <LucideStar class="h-4 w-4" />
-            <span v-if="open">Subscribe</span>
+            <span v-if="open">Upgrade</span>
           </Button>
         </SidebarMenuItem>
         <SidebarMenuItem>
-          <DropdownMenu>
+          <DropdownMenu v-model:open="isDropdownOpen">
             <DropdownMenuTrigger as-child>
-              <SidebarMenuButton size="lg">
-                <UserButton afterSignOutUrl="/auth/login" />
-                <div class="grid flex-1 text-left text-sm leading-tight">
-                  <span class="truncate font-semibold">
-                    {{ user?.fullName ?? user?.primaryEmailAddress }}
-                  </span>
+              <Button
+                variant="ghost"
+                class="relative w-full h-auto px-2 py-1.5"
+              >
+                <div class="flex items-center gap-2">
+                  <UserButton afterSignOutUrl="/auth/login" />
+                  <div v-if="open" class="flex flex-col items-center text-sm">
+                    <span class="font-medium">{{ user?.fullName }}</span>
+                    <span class="text-muted-foreground text-xs">{{
+                      user?.primaryEmailAddress
+                    }}</span>
+                  </div>
+                  <div
+                    v-if="open"
+                    class="ml-auto flex items-center self-stretch"
+                  >
+                    <LucideChevronsUpDown
+                      class="h-5 w-5"
+                      :class="{ 'rotate-180': isDropdownOpen }"
+                    />
+                  </div>
                 </div>
-              </SidebarMenuButton>
+              </Button>
             </DropdownMenuTrigger>
-            <!-- Add dropdown content if needed -->
+            <DropdownMenuContent align="start" class="w-56">
+              <div class="flex flex-col gap-1 p-2">
+                <div class="flex items-center gap-2 px-2 py-1.5">
+                  <UserButton afterSignOutUrl="/auth/login" />
+                  <div class="flex flex-col items-start text-sm">
+                    <span class="font-medium">{{ user?.fullName }}</span>
+                    <span class="text-muted-foreground text-xs">{{
+                      user?.primaryEmailAddress
+                    }}</span>
+                  </div>
+                </div>
+
+                <DropdownMenuItem class="gap-2">
+                  <LucideStar class="h-4 w-4" />
+                  <span>Upgrade to Pro</span>
+                </DropdownMenuItem>
+
+                <DropdownMenuItem class="gap-2">
+                  <LucideUser class="h-4 w-4" />
+                  <span>Account</span>
+                </DropdownMenuItem>
+
+                <DropdownMenuItem class="gap-2">
+                  <LucideSettings class="h-4 w-4" />
+                  <span>Settings</span>
+                </DropdownMenuItem>
+
+                <DropdownMenuItem class="gap-2">
+                  <LucideBell class="h-4 w-4" />
+                  <span>Notifications</span>
+                </DropdownMenuItem>
+
+                <DropdownMenuItem class="gap-2">
+                  <LucideGithub class="h-4 w-4" />
+                  <span>Github Repository</span>
+                </DropdownMenuItem>
+
+                <DropdownMenuItem class="gap-2">
+                  <LucidePaintbrush class="h-4 w-4" />
+                  <span>Theme</span>
+                </DropdownMenuItem>
+
+                <DropdownMenuSeparator />
+
+                <SignOutButton>
+                  <DropdownMenuItem
+                    class="gap-2 text-destructive focus:text-destructive"
+                  >
+                    <LucideLogOut class="h-4 w-4" />
+                    <span>Log out</span>
+                  </DropdownMenuItem>
+                </SignOutButton>
+              </div>
+            </DropdownMenuContent>
           </DropdownMenu>
         </SidebarMenuItem>
       </SidebarMenu>
@@ -98,6 +166,12 @@ import {
   LucideHome,
   LucideFolders,
   LucideStar,
+  LucideLogOut,
+  LucideChevronsUpDown,
+  LucideUser,
+  LucideBell,
+  LucideGithub,
+  LucidePaintbrush,
 } from "lucide-vue-next";
 import { useSidebar } from "./ui/sidebar";
 
@@ -119,8 +193,6 @@ watch(
 );
 
 // Navigation items data
-const supportLink = ref("/support");
-
 const navigationItems = [
   {
     path: "/",
@@ -175,6 +247,8 @@ const openPolarCheckout = async () => {
     console.error("Failed to open checkout:", error);
   }
 };
+
+const isDropdownOpen = ref(false);
 </script>
 
 <style scoped></style>

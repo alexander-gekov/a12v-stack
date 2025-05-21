@@ -3,7 +3,6 @@ import { LucideGithub, LucideLinkedin, LucideTwitter } from "lucide-vue-next";
 
 definePageMeta({
   title: "About Me",
-  layout: "default",
 });
 
 const socialLinks = [
@@ -28,7 +27,12 @@ const socialLinks = [
 <template>
   <PageHeader title="About Me"> </PageHeader>
   <div class="space-y-4">
-    <p class="text-lg text-muted-foreground">
+    <img
+      src="https://utfs.io/f/9RkdvSiH3SqUSGyH2uLh3NWxoyYrLdip8EsAgFCwj9QBMRqS"
+      alt="Avatar"
+      class="w-24 h-24 rounded-full"
+    />
+    <p class="text-sm max-w-2/3 text-muted-foreground font-mono">
       Software Developer from Sofia, Bulgaria. ICT & Software Engineering
       graduate, Frontend Enthusiast & Content Creator, currently building my own
       startup at talsight.com.

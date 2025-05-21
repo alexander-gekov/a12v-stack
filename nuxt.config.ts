@@ -94,7 +94,11 @@ export default defineNuxtConfig({
     plugins: ["relativeTime", "advancedFormat", "duration", "timezone", "utc"],
   },
 
-  components: [{ path: "~/components", pathPrefix: false }],
+  components: [
+    { path: "~/components", pathPrefix: false },
+    { path: "~/components/auth", pathPrefix: true, prefix: "Auth" },
+    { path: "~/components/layout", pathPrefix: true, prefix: "Layout" },
+  ],
 
   plugins: [
     {

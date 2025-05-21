@@ -34,7 +34,7 @@ watch(
   () => userId.value,
   async () => {
     if (userId.value === null) {
-      navigateTo("/auth/login");
+      navigateTo("/login");
     }
   }
 );

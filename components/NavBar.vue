@@ -11,10 +11,25 @@
               title="Toggle Sidebar"
             />
             <Separator orientation="vertical" class="h-4" />
+            <OrganizationSwitcher />
           </div>
         </header>
         <Breadcrumbs />
         <div class="flex items-center flex-1 justify-end gap-4">
+          <div class="flex items-center gap-2">
+            <Search
+              :navigation-items="
+                navMenu
+                  .flatMap((nav) => nav.items)
+                  .map((item) => ({
+                    path: item.link,
+                    label: item.title,
+                    icon: item.icon,
+                  }))
+              "
+            />
+          </div>
+
           <NuxtLink :to="supportLink" class="flex items-center">
             <Button variant="ghost" size="xs" class="text-muted-foreground">
               <LucideHelpCircle class="h-5 w-5" />
@@ -82,7 +97,7 @@
           </DropdownMenu>
 
           <ColorModeSwitch />
-          <UserButton afterSignOutUrl="/auth/login" />
+          <UserButton afterSignOutUrl="/login" />
         </div>
       </div>
     </div>
@@ -92,6 +107,7 @@
 
 <script lang="ts" setup>
 import { LucideHelpCircle, LucideBell } from "lucide-vue-next";
+import { navMenu } from "../constants/menus";
 
 const supportLink = ref("/about");
 </script>
