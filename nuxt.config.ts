@@ -31,7 +31,6 @@ export default defineNuxtConfig({
     "@clerk/nuxt",
     "@nuxtjs/color-mode",
     "@nuxtjs/supabase",
-    "@prisma/nuxt",
     "@polar-sh/nuxt",
   ],
 
@@ -99,11 +98,6 @@ export default defineNuxtConfig({
     { path: "~/components/auth", pathPrefix: true, prefix: "Auth" },
     { path: "~/components/layout", pathPrefix: true, prefix: "Layout" },
   ],
-
-  prisma: {
-    runMigration: false,
-    skipPrompts: true,
-  },
 
   plugins: [
     {
