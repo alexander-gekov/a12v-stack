@@ -1,17 +1,17 @@
 {
-  "name": "@a12v-stack/app",
+  "name": "a12v-stack",
   "version": "0.0.1",
   "private": true,
-  "nx": {
-    "name": "@a12v-stack/app"
-  },
-  "packageManager": "npm@10.8.2",
   "scripts": {
-    "dev": "nuxt dev",
     "build": "nuxt build",
-    "start": "nuxt start",
+    "dev": "nuxt dev",
     "generate": "nuxt generate",
+    "preview": "nuxt preview",
     "postinstall": "nuxt prepare && prisma generate"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=6.0.0"
   },
   "dependencies": {
     "@clerk/nuxt": "^1.6.5",
@@ -49,5 +49,8 @@
   },
   "devDependencies": {
     "prisma": "^6.8.2"
+  },
+  "overrides": {
+    "vue": "latest"
   }
 }
