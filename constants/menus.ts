@@ -2,6 +2,7 @@ import {
   LucideCircle,
   LucideCircleHelp,
   LucideHome,
+  LucideMessageCircle,
   LucideSettings,
 } from "lucide-vue-next";
 import type { NavMenu, NavMenuItems } from "../types/nav";
@@ -19,6 +20,11 @@ export const navMenu: NavMenu[] = [
         title: "Items",
         icon: LucideCircle,
         link: "/items",
+      },
+      {
+        title: "Chat",
+        icon: LucideMessageCircle,
+        link: "/chat",
       },
       {
         title: "Settings",

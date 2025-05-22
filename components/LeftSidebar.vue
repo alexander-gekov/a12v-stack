@@ -34,20 +34,20 @@
         <SidebarGroupLabel>Discover</SidebarGroupLabel>
         <SidebarMenu>
           <SidebarMenuItem
-            v-for="item in navigationItems"
-            :key="item.path"
+            v-for="item in navMenu[0].items"
+            :key="item.link"
             as-child
           >
-            <NuxtLink :to="item.path">
+            <NuxtLink :to="item.link">
               <SidebarMenuButton
                 class="w-full text-primary"
                 :class="
-                  currentRoute.path == item.path ? 'bg-sidebar-hover' : ''
+                  currentRoute.path == item.link ? 'bg-sidebar-hover' : ''
                 "
-                :tooltip="item.label"
+                :tooltip="item.title"
               >
                 <component :is="item.icon" class="mr-2 h-4 w-4" />
-                <span>{{ item.label }}</span>
+                <span>{{ item.title }}</span>
               </SidebarMenuButton>
             </NuxtLink>
           </SidebarMenuItem>
@@ -174,6 +174,7 @@ import {
   LucidePaintbrush,
 } from "lucide-vue-next";
 import { useSidebar } from "./ui/sidebar";
+import { navMenu } from "../constants/menus";
 
 const { user } = useUser();
 const { userId, isSignedIn } = useAuth();
@@ -191,25 +192,6 @@ watch(
     }
   }
 );
-
-// Navigation items data
-const navigationItems = [
-  {
-    path: "/",
-    label: "Home",
-    icon: LucideHome,
-  },
-  {
-    path: "/items",
-    label: "Items",
-    icon: LucideFolders,
-  },
-  {
-    path: "/settings",
-    label: "Settings",
-    icon: LucideSettings,
-  },
-];
 
 interface PolarProductsResponse {
   result: {

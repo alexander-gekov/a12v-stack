@@ -1,5 +1,13 @@
 <script setup lang="ts">
-import { LucidePlusCircle } from "lucide-vue-next";
+import {
+  LucideBriefcase,
+  LucideChartBar,
+  LucideDollarSign,
+  LucidePlusCircle,
+  LucideUsers,
+  LucideUserPlus,
+  LucideSettings,
+} from "lucide-vue-next";
 
 definePageMeta({
   title: "Home",
@@ -7,31 +15,30 @@ definePageMeta({
 });
 
 const stats = [
-  { name: "Total Users", value: "8.9k", icon: "i-heroicons-users" },
+  { name: "Total Users", value: "8.9k", icon: LucideUsers },
   {
     name: "Monthly Revenue",
     value: "$20,456",
-    icon: "i-heroicons-currency-dollar",
+    icon: LucideDollarSign,
   },
-  { name: "Active Projects", value: "245", icon: "i-heroicons-briefcase" },
-  { name: "Completion Rate", value: "95%", icon: "i-heroicons-chart-bar" },
+  { name: "Active Projects", value: "245", icon: LucideBriefcase },
+  { name: "Completion Rate", value: "95%", icon: LucideChartBar },
 ];
 </script>
 
 <template>
   <div class="p-8">
-    <div class="flex items-center justify-between mb-8">
-      <div>
-        <h1 class="text-3xl font-bold">Welcome back!</h1>
-        <p class="text-muted-foreground mt-1">
-          Here's what's happening with your projects today.
-        </p>
-      </div>
-      <Button size="lg">
-        <LucidePlusCircle class="w-4 h-4 mr-2" />
-        New Item
-      </Button>
-    </div>
+    <PageHeader
+      title="Welcome back!"
+      description="Here's what's happening with your projects today."
+    >
+      <template #action>
+        <Button>
+          <LucidePlusCircle class="w-4 h-4 mr-2" />
+          New Item
+        </Button>
+      </template>
+    </PageHeader>
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
       <Card v-for="stat in stats" :key="stat.name" class="p-4">
@@ -72,15 +79,15 @@ const stats = [
         <CardContent>
           <div class="space-y-2">
             <Button variant="outline" class="w-full justify-start">
-              <span class="i-heroicons-plus-circle mr-2" />
+              <LucidePlusCircle class="w-4 h-4 mr-2" />
               Create New Project
             </Button>
             <Button variant="outline" class="w-full justify-start">
-              <span class="i-heroicons-user-plus mr-2" />
+              <LucideUserPlus class="w-4 h-4 mr-2" />
               Invite Team Member
             </Button>
             <Button variant="outline" class="w-full justify-start">
-              <span class="i-heroicons-cog mr-2" />
+              <LucideSettings class="w-4 h-4 mr-2" />
               Account Settings
             </Button>
           </div>

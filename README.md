@@ -67,6 +67,12 @@ For integrating Supabase with Clerk, follow the official guide:
 
 ---
 
+## Trigger.dev + Prisma Guide
+
+👉 [Trigger.dev + Prisma Guide](https://trigger.dev/docs/guides/frameworks/prisma)
+
+---
+
 <div align="center">
   <sub>Made with ❤️ by A12V - AlexanderGekov</sub>
 </div>
