@@ -100,6 +100,11 @@ export default defineNuxtConfig({
     { path: "~/components/layout", pathPrefix: true, prefix: "Layout" },
   ],
 
+  prisma: {
+    runMigration: false,
+    skipPrompts: true,
+  },
+
   plugins: [
     {
       src: "~/plugins/vue-query.ts",
