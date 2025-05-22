@@ -5,8 +5,6 @@ import { streamText } from "ai";
 export default defineEventHandler(async (event) => {
   const { messages, modelName } = await readBody(event);
 
-  console.log(messages, modelName);
-
   const result = streamText({
     model: together(modelName ?? "meta-llama/Llama-3.2-3B-Instruct-Turbo"),
     messages,

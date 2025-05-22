@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useChat } from "@ai-sdk/vue";
-import { LucideSend, LucideArrowUp, LucideSearch } from "lucide-vue-next";
+import { LucideArrowUp } from "lucide-vue-next";
 import { nextTick, watch } from "vue";
 
 definePageMeta({
@@ -26,6 +26,7 @@ const { messages, input, handleSubmit } = useChat({
 
 watch(enter, (v) => {
   if (v) handleSubmit();
+  input.value = "";
 });
 
 const exampleQuestions = [
@@ -43,6 +44,8 @@ const scrollToBottom = () => {
     }
   });
 };
+
+const { user } = useUser();
 
 watch(messages, scrollToBottom, { deep: true });
 </script>
@@ -76,17 +79,46 @@ watch(messages, scrollToBottom, { deep: true });
             <div
               v-for="(m, index) in messages"
               :key="m.id ? m.id : index"
-              class="flex flex-col space-y-2"
+              :class="[
+                'flex items-start gap-3',
+                m.role === 'user' ? 'flex-row-reverse' : 'flex-row',
+              ]"
             >
-              <div class="text-sm text-zinc-400">
-                {{ m.role === "user" ? "You" : "Assistant" }}
-              </div>
-              <div v-for="part in m.parts" :key="part.type">
+              <Avatar
+                :class="[
+                  'flex-none',
+                  m.role === 'user' ? 'bg-primary' : 'bg-muted',
+                ]"
+              >
+                <AvatarImage
+                  v-if="m.role === 'user' && user?.imageUrl"
+                  :src="user?.imageUrl"
+                />
+              </Avatar>
+
+              <div
+                :class="[
+                  'flex flex-col space-y-2 max-w-[80%]',
+                  m.role === 'user' ? 'items-end' : 'items-start',
+                ]"
+              >
+                <div class="text-sm text-zinc-400">
+                  {{ m.role === "user" ? "You" : "Assistant" }}
+                </div>
                 <div
-                  v-if="part.type === 'text'"
-                  class="prose prose-invert max-w-none"
+                  :class="[
+                    'rounded-lg p-3',
+                    m.role === 'user' ? 'bg-primary/10' : 'bg-muted',
+                  ]"
                 >
-                  {{ part.text }}
+                  <div v-for="part in m.parts" :key="part.type">
+                    <div
+                      v-if="part.type === 'text'"
+                      class="prose prose-invert whitespace-pre-wrap max-w-none"
+                    >
+                      {{ part.text }}
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
