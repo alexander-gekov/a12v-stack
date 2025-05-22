@@ -75,10 +75,6 @@ export default defineNuxtConfig({
   },
 
   nitro: {
-    preset: "vercel",
-    output: {
-      dir: "../../.vercel/output",
-    },
     vercel: {
       functions: {
         maxDuration: 60,
