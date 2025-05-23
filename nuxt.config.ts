@@ -32,6 +32,7 @@ export default defineNuxtConfig({
     "@nuxtjs/color-mode",
     "@nuxtjs/supabase",
     "@polar-sh/nuxt",
+    "@nuxt/fonts",
   ],
 
   colorMode: {

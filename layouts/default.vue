@@ -1,7 +1,7 @@
 <template>
   <ClerkLoaded>
     <SignedIn>
-      <SidebarProvider :default-open="false">
+      <SidebarProvider>
         <div v-if="isLargeScreen" class="flex flex-col md:flex-row w-full">
           <LeftSidebar />
           <SidebarInset>
