@@ -12,6 +12,7 @@
             />
             <Separator orientation="vertical" class="h-4" />
             <OrganizationSwitcher
+              v-if="isLargeScreen"
               :appearance="{
                 ...(isDark && {
                   baseTheme: dark,
@@ -22,7 +23,7 @@
         </header>
         <Breadcrumbs />
         <div class="flex items-center flex-1 justify-end gap-4">
-          <div class="flex items-center gap-2">
+          <div v-if="isLargeScreen" class="flex items-center gap-2">
             <Search
               :navigation-items="
                 navMenu
@@ -124,6 +125,8 @@ import { dark } from "@clerk/themes";
 import { navMenu } from "../constants/menus";
 
 const colorMode = useColorMode();
+
+const isLargeScreen = useMediaQuery("(min-width: 800px)");
 
 const isDark = computed(() => colorMode.preference === "dark");
 

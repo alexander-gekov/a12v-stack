@@ -61,11 +61,14 @@ watch(messages, scrollToBottom, { deep: true });
             <div class="h-full flex flex-col items-center justify-center">
               <h1 class="text-4xl font-bold mb-8">How can I help you?</h1>
 
-              <div class="grid grid-cols-2 gap-4 w-full max-w-2xl mb-8">
+              <div
+                class="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full max-w-2xl mb-8"
+              >
                 <Button
                   v-for="question in exampleQuestions"
                   :key="question"
                   variant="outline"
+                  class="text-wrap h-fit text-xs sm:text-sm text-left"
                   @click="input = question"
                   @submit="handleSubmit"
                 >
@@ -126,7 +129,7 @@ watch(messages, scrollToBottom, { deep: true });
         </div>
       </div>
 
-      <div class="flex-none p-4 border-t bg-background">
+      <div class="flex-none p-2 lg:p-4 border-t bg-background">
         <form @submit.prevent="handleSubmit" class="flex flex-col space-y-2">
           <Select v-model="model">
             <SelectTrigger>

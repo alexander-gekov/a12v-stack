@@ -2,7 +2,7 @@
   <ClerkLoaded>
     <SignedIn>
       <SidebarProvider>
-        <div v-if="isLargeScreen" class="flex flex-col md:flex-row w-full">
+        <div class="flex flex-col md:flex-row w-full">
           <LeftSidebar />
           <SidebarInset>
             <main class="flex flex-col w-full h-screen justify-between">
@@ -28,7 +28,6 @@ import LeftSidebar from "../components/LeftSidebar.vue";
 import { SidebarProvider, SidebarInset } from "../components/ui/sidebar";
 
 const { userId } = useAuth();
-const isLargeScreen = useMediaQuery("(min-width: 800px)");
 
 watch(
   () => userId.value,
