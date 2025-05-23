@@ -142,9 +142,7 @@ watch(messages, scrollToBottom, { deep: true });
             </SelectContent>
           </Select>
 
-          <div
-            class="flex items-center space-x-2 bg-white/5 rounded-lg border border-white/10"
-          >
+          <div class="flex items-center space-x-2 rounded-lg border-white/10">
             <Textarea
               rows="2"
               v-model="input"

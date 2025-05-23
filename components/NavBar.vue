@@ -11,7 +11,13 @@
               title="Toggle Sidebar"
             />
             <Separator orientation="vertical" class="h-4" />
-            <OrganizationSwitcher />
+            <OrganizationSwitcher
+              :appearance="{
+                ...(isDark && {
+                  baseTheme: dark,
+                }),
+              }"
+            />
           </div>
         </header>
         <Breadcrumbs />
@@ -31,7 +37,7 @@
           </div>
 
           <NuxtLink :to="supportLink" class="flex items-center">
-            <Button variant="ghost" size="xs" class="text-muted-foreground">
+            <Button variant="ghost" size="xs" class="text-muted-foreground h-8">
               <LucideHelpCircle class="h-5 w-5" />
             </Button>
           </NuxtLink>
@@ -41,7 +47,7 @@
               <Button
                 variant="ghost"
                 size="xs"
-                class="text-muted-foreground relative"
+                class="text-muted-foreground relative h-8"
               >
                 <LucideBell class="h-5 w-5" />
                 <span
@@ -107,7 +113,12 @@
 
 <script lang="ts" setup>
 import { LucideHelpCircle, LucideBell } from "lucide-vue-next";
+import { dark } from "@clerk/themes";
 import { navMenu } from "../constants/menus";
+
+const colorMode = useColorMode();
+
+const isDark = computed(() => colorMode.preference === "dark");
 
 const supportLink = ref("/about");
 </script>

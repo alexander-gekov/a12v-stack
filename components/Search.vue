@@ -25,7 +25,11 @@ defineProps<{
 }>();
 
 function handleSelectLink(path: string) {
-  router.push(path);
+  if (path.startsWith("http")) {
+    window.open(path, "_blank");
+  } else {
+    router.push(path);
+  }
   openCommand.value = false;
 }
 </script>
@@ -35,7 +39,7 @@ function handleSelectLink(path: string) {
     <Button
       variant="outline"
       size="sm"
-      class="text-xs w-full"
+      class="text-xs w-full h-7"
       @click="openCommand = !openCommand"
     >
       <LucideSearch class="mr-2 h-4 w-4" />

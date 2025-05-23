@@ -1,9 +1,13 @@
 import {
   LucideCircle,
   LucideCircleHelp,
+  LucideGithub,
   LucideHome,
+  LucideLinkedin,
   LucideMessageCircle,
   LucideSettings,
+  LucideTwitter,
+  LucideX,
 } from "lucide-vue-next";
 import type { NavMenu, NavMenuItems } from "../types/nav";
 
@@ -30,6 +34,26 @@ export const navMenu: NavMenu[] = [
         title: "Settings",
         icon: LucideSettings,
         link: "/settings",
+      },
+    ],
+  },
+  {
+    heading: "Socials",
+    items: [
+      {
+        title: "GitHub",
+        icon: LucideGithub,
+        link: "https://github.com/alexander-gekov",
+      },
+      {
+        title: "LinkedIn",
+        icon: LucideLinkedin,
+        link: "https://www.linkedin.com/in/alexander-gekov/",
+      },
+      {
+        title: "X.com",
+        icon: LucideTwitter,
+        link: "https://x.com/AlexanderGekov",
       },
     ],
   },

@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import { type Component, computed } from 'vue';
+import { type Component, computed } from "vue";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from '~~/components/ui/tooltip';
+} from "~~/components/ui/tooltip";
 import SidebarMenuButtonChild, {
   type SidebarMenuButtonProps,
-} from './SidebarMenuButtonChild.vue';
-import { useSidebar } from './utils';
+} from "./SidebarMenuButtonChild.vue";
+import { useSidebar } from "./utils";
 
 defineOptions({
   inheritAttrs: false,
@@ -21,9 +21,9 @@ const props = withDefaults(
     }
   >(),
   {
-    as: 'button',
-    variant: 'default',
-    size: 'default',
+    as: "button",
+    variant: "default",
+    size: "xs",
   }
 );
 

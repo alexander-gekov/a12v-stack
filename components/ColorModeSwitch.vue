@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { LucideMoon, LucideSun } from 'lucide-vue-next';
+import { LucideMoon, LucideSun } from "lucide-vue-next";
 
 const colorMode = useColorMode();
 </script>
@@ -7,7 +7,7 @@ const colorMode = useColorMode();
 <template>
   <DropdownMenu>
     <DropdownMenuTrigger as-child>
-      <Button size="xs" variant="ghost">
+      <Button size="xs" variant="ghost" class="h-8">
         <LucideSun
           class="w-4 h-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0"
         />
