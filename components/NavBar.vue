@@ -103,7 +103,14 @@
           </DropdownMenu>
 
           <ColorModeSwitch />
-          <UserButton afterSignOutUrl="/login" />
+          <UserButton
+            afterSignOutUrl="/login"
+            :appearance="{
+              ...(isDark && {
+                baseTheme: dark,
+              }),
+            }"
+          />
         </div>
       </div>
     </div>
