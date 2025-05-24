@@ -8,7 +8,7 @@
             <main class="flex flex-col w-full h-screen justify-between">
               <div class="flex flex-col page-wrap">
                 <NavBar />
-                <div :class="'xl:max-w-6xl mx-auto w-full px-6'">
+                <div :class="'mx-auto w-full'">
                   <NuxtPage />
                 </div>
               </div>

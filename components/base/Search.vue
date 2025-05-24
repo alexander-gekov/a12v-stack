@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import Kbd from "./Kbd.vue";
 import { useMagicKeys } from "@vueuse/core";
 import { LucideSearch } from "lucide-vue-next";
 
@@ -49,8 +50,8 @@ function handleSelectLink(path: string) {
       <div
         class="ml-auto flex items-center space-x-0.5 group-data-[collapsible=icon]:hidden"
       >
-        <BaseKbd>{{ metaSymbol }}</BaseKbd>
-        <BaseKbd>K</BaseKbd>
+        <Kbd>{{ metaSymbol }}</Kbd>
+        <Kbd>K</Kbd>
       </div>
     </Button>
   </SidebarMenuButton>

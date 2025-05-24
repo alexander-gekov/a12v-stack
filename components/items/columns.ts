@@ -1,17 +1,49 @@
 import type { ColumnDef } from "@tanstack/vue-table";
 import type { Item } from "../../types/item";
 import { h } from "vue";
-import { LucideMoreHorizontal } from "lucide-vue-next";
-import { createSelectionColumn } from "../../components/base/DataTableSelectionColumn";
+import DataTableDropdown from "./data-table-dropdown.vue";
+import { ArrowUpDown } from "lucide-vue-next";
+import { Button } from "../ui/button";
+import Badge from "../ui/badge/Badge.vue";
+import { Checkbox } from "../ui/checkbox";
 
 export const columns: ColumnDef<Item>[] = [
-  createSelectionColumn<Item>(),
   {
+    id: "select",
+    size: 50,
+    minSize: 50,
+    maxSize: 50,
+    header: ({ table }) =>
+      h(Checkbox, {
+        modelValue: table.getIsAllPageRowsSelected(),
+        "onUpdate:modelValue": (value: boolean | "indeterminate") =>
+          table.toggleAllPageRowsSelected(!!value),
+        ariaLabel: "Select all",
+      }),
+    cell: ({ row }) =>
+      h(Checkbox, {
+        modelValue: row.getIsSelected(),
+        "onUpdate:modelValue": (value: boolean | "indeterminate") =>
+          row.toggleSelected(!!value),
+        ariaLabel: "Select row",
+      }),
+    enableSorting: false,
+    enableHiding: false,
+  },
+  {
+    enableResizing: true,
     accessorKey: "name",
+    size: 300,
+    minSize: 300,
+    maxSize: 500,
     header: "Name",
     cell: ({ row }) => row.getValue("name"),
   },
   {
+    enableResizing: true,
+    size: 300,
+    minSize: 300,
+    maxSize: 500,
     accessorKey: "description",
     header: "Description",
     cell: ({ row }) => row.getValue("description"),
@@ -23,14 +55,14 @@ export const columns: ColumnDef<Item>[] = [
       const status = row.getValue("status") as Item["status"];
 
       return h(
-        "Badge",
+        Badge,
         {
           variant:
             status === "published"
-              ? "success"
+              ? "default"
               : status === "draft"
                 ? "secondary"
-                : "destructive",
+                : "outline",
         },
         status
       );
@@ -41,49 +73,33 @@ export const columns: ColumnDef<Item>[] = [
   },
   {
     accessorKey: "createdAt",
-    header: "Created",
+    header: ({ column }) => {
+      return h(
+        Button,
+        {
+          size: "xs",
+          variant: "ghost",
+          onClick: () => column.toggleSorting(column.getIsSorted() === "asc"),
+        },
+        () => ["Created", h(ArrowUpDown, { class: "ml-2 h-4 w-4" })]
+      );
+    },
     cell: ({ row }) => formatDate(row.getValue("createdAt")),
     sortingFn: "datetime",
   },
   {
     id: "actions",
-    enableSorting: false,
+    enableHiding: false,
     cell: ({ row }) => {
       const item = row.original;
 
-      return h("div", { class: "flex items-center justify-end" }, [
-        h(
-          "DropdownMenu",
-          {},
-          {
-            default: () => [
-              h("DropdownMenuTrigger", { asChild: true }, () =>
-                h(
-                  "Button",
-                  {
-                    variant: "ghost",
-                    class: "h-8 w-8 p-0",
-                  },
-                  () => [
-                    h("span", { class: "sr-only" }, "Open menu"),
-                    h(LucideMoreHorizontal, { class: "h-4 w-4" }),
-                  ]
-                )
-              ),
-              h("DropdownMenuContent", { align: "end" }, () => [
-                h("DropdownMenuItem", {}, () => "Edit"),
-                h("DropdownMenuItem", {}, () => "Duplicate"),
-                h("DropdownMenuSeparator"),
-                h(
-                  "DropdownMenuItem",
-                  { class: "text-destructive" },
-                  () => "Delete"
-                ),
-              ]),
-            ],
-          }
-        ),
-      ]);
+      return h(
+        "div",
+        { class: "relative" },
+        h(DataTableDropdown, {
+          item,
+        })
+      );
     },
   },
 ];

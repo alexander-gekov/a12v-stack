@@ -19,7 +19,7 @@ interface ItemsQueryParams {
 export const useItemsQuery = (params: ItemsQueryParams = {}) => {
   const queryKey = ["items", params] as const;
 
-  const { data, isLoading } = useQuery({
+  const itemsQuery = useQuery({
     queryKey,
     queryFn: () => {
       const searchParams = new URLSearchParams();
@@ -40,11 +40,13 @@ export const useItemsQuery = (params: ItemsQueryParams = {}) => {
 
       return $fetch<ItemsResponse>(`/api/items?${searchParams.toString()}`);
     },
+    refetchOnWindowFocus: true,
+    refetchOnMount: true,
   });
 
   const queryClient = useQueryClient();
 
-  const { mutate: createItem } = useMutation({
+  const { mutateAsync: createItem } = useMutation({
     mutationFn: (newItem: CreateItemDTO) =>
       $fetch<Item>("/api/items", {
         method: "POST",
@@ -55,7 +57,7 @@ export const useItemsQuery = (params: ItemsQueryParams = {}) => {
     },
   });
 
-  const { mutate: updateItem } = useMutation({
+  const { mutateAsync: updateItem } = useMutation({
     mutationFn: ({ id, data }: { id: string; data: UpdateItemDTO }) =>
       $fetch<Item>(`/api/items/${id}`, {
         method: "PATCH",
@@ -66,7 +68,7 @@ export const useItemsQuery = (params: ItemsQueryParams = {}) => {
     },
   });
 
-  const { mutate: deleteItem } = useMutation({
+  const { mutateAsync: deleteItem } = useMutation({
     mutationFn: (id: string) =>
       $fetch<void>(`/api/items/${id}`, {
         method: "DELETE",
@@ -77,8 +79,11 @@ export const useItemsQuery = (params: ItemsQueryParams = {}) => {
   });
 
   return {
-    data,
-    isLoading,
+    ...itemsQuery,
+    data: itemsQuery.data,
+    isLoading: itemsQuery.isLoading,
+    isPending: itemsQuery.isPending,
+    refetch: itemsQuery.refetch,
     createItem,
     updateItem,
     deleteItem,
