@@ -1,13 +1,11 @@
 import type { ColumnDef } from "@tanstack/vue-table";
 import type { Item } from "../../types/item";
 import { h } from "vue";
+import { LucideMoreHorizontal } from "lucide-vue-next";
+import { createSelectionColumn } from "../../components/base/DataTableSelectionColumn";
 
 export const columns: ColumnDef<Item>[] = [
-  {
-    id: "select",
-    enableSorting: false,
-    enableHiding: false,
-  },
+  createSelectionColumn<Item>(),
   {
     accessorKey: "name",
     header: "Name",
@@ -37,14 +35,19 @@ export const columns: ColumnDef<Item>[] = [
         status
       );
     },
+    filterFn: (row, id, value) => {
+      return value.includes(row.getValue(id));
+    },
   },
   {
     accessorKey: "createdAt",
     header: "Created",
     cell: ({ row }) => formatDate(row.getValue("createdAt")),
+    sortingFn: "datetime",
   },
   {
     id: "actions",
+    enableSorting: false,
     cell: ({ row }) => {
       const item = row.original;
 
@@ -63,7 +66,7 @@ export const columns: ColumnDef<Item>[] = [
                   },
                   () => [
                     h("span", { class: "sr-only" }, "Open menu"),
-                    h("MoreHorizontal", { class: "h-4 w-4" }),
+                    h(LucideMoreHorizontal, { class: "h-4 w-4" }),
                   ]
                 )
               ),

@@ -27,7 +27,7 @@ const stats = [
 </script>
 
 <template>
-  <div class="p-8">
+  <div>
     <PageHeader
       title="Welcome back!"
       description="Here's what's happening with your projects today."

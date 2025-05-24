@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { cn } from "../../lib/utils";
 import { Loader2 } from "lucide-vue-next";
-import PasswordInput from "../PasswordInput.vue";
+import PasswordInput from "../base/PasswordInput.vue";
 
 const isLoading = ref(false);
 async function onSubmit(event: Event) {

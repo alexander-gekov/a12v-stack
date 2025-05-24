@@ -37,6 +37,7 @@ export default defineNuxtConfig({
     "@nuxt/fonts",
     "@nuxt/image",
     "nuxt-posthog",
+    "nuxt-lucide-icons",
   ],
 
   colorMode: {

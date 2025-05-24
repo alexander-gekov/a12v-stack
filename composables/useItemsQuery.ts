@@ -1,12 +1,45 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/vue-query";
 import type { Item, CreateItemDTO, UpdateItemDTO } from "../types/item";
 
-export const useItemsQuery = () => {
-  const queryKey = ["items"] as const;
+interface ItemsResponse {
+  items: Item[];
+  pageCount: number;
+  total: number;
+}
 
-  const { data: items, isLoading } = useQuery({
+interface ItemsQueryParams {
+  name?: string;
+  status?: string | string[];
+  sortBy?: string;
+  sortOrder?: "asc" | "desc";
+  page?: number;
+  pageSize?: number;
+}
+
+export const useItemsQuery = (params: ItemsQueryParams = {}) => {
+  const queryKey = ["items", params] as const;
+
+  const { data, isLoading } = useQuery({
     queryKey,
-    queryFn: () => $fetch<Item[]>("/api/items"),
+    queryFn: () => {
+      const searchParams = new URLSearchParams();
+
+      if (params.name) searchParams.set("name", params.name);
+      if (params.status) {
+        if (Array.isArray(params.status)) {
+          params.status.forEach((s) => searchParams.append("status", s));
+        } else {
+          searchParams.set("status", params.status);
+        }
+      }
+      if (params.sortBy) searchParams.set("sortBy", params.sortBy);
+      if (params.sortOrder) searchParams.set("sortOrder", params.sortOrder);
+      if (params.page) searchParams.set("page", params.page.toString());
+      if (params.pageSize)
+        searchParams.set("pageSize", params.pageSize.toString());
+
+      return $fetch<ItemsResponse>(`/api/items?${searchParams.toString()}`);
+    },
   });
 
   const queryClient = useQueryClient();
@@ -17,10 +50,8 @@ export const useItemsQuery = () => {
         method: "POST",
         body: newItem,
       }),
-    onSuccess: (createdItem) => {
-      queryClient.setQueryData<Item[]>(queryKey, (old) =>
-        old ? [...old, createdItem] : [createdItem]
-      );
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["items"] });
     },
   });
 
@@ -30,14 +61,8 @@ export const useItemsQuery = () => {
         method: "PATCH",
         body: data,
       }),
-    onSuccess: (updatedItem) => {
-      queryClient.setQueryData<Item[]>(
-        queryKey,
-        (old) =>
-          old?.map((item) =>
-            item.id === updatedItem.id ? updatedItem : item
-          ) ?? []
-      );
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["items"] });
     },
   });
 
@@ -46,16 +71,13 @@ export const useItemsQuery = () => {
       $fetch<void>(`/api/items/${id}`, {
         method: "DELETE",
       }),
-    onSuccess: (_, deletedId) => {
-      queryClient.setQueryData<Item[]>(
-        queryKey,
-        (old) => old?.filter((item) => item.id !== deletedId) ?? []
-      );
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["items"] });
     },
   });
 
   return {
-    items,
+    data,
     isLoading,
     createItem,
     updateItem,
