@@ -10,18 +10,18 @@
               class="-ml-2 size-4 text-muted-foreground"
               title="Toggle Sidebar"
             />
-            <Separator orientation="vertical" class="h-4" />
-            <OrganizationSwitcher
+            <Separator orientation="vertical" class="h-4 w-1" />
+            <!-- <OrganizationSwitcher
               v-if="isLargeScreen"
               :appearance="{
                 ...(isDark && {
                   baseTheme: dark,
                 }),
               }"
-            />
+            /> -->
+            <Breadcrumbs />
           </div>
         </header>
-        <Breadcrumbs />
         <div class="flex items-center flex-1 justify-end gap-4">
           <div v-if="isLargeScreen" class="flex items-center gap-2">
             <Search

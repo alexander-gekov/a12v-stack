@@ -22,6 +22,8 @@ export default defineNuxtConfig({
     polarAccessToken: process.env.POLAR_ACCESS_TOKEN,
     polarCheckoutSuccessUrl: process.env.POLAR_SUCCESS_URL,
     polarServer: process.env.POLAR_SERVER,
+    posthogPublicKey: process.env.POSTHOG_API_KEY,
+    posthogHost: process.env.POSTHOG_API_HOST,
   },
   modules: [
     "shadcn-nuxt",
@@ -34,6 +36,7 @@ export default defineNuxtConfig({
     "@polar-sh/nuxt",
     "@nuxt/fonts",
     "@nuxt/image",
+    "nuxt-posthog",
   ],
 
   colorMode: {

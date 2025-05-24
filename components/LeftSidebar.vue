@@ -20,7 +20,7 @@
                   >
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent class="ml-2 w-64">
+              <DropdownMenuContent class="ml-8 w-64">
                 <DropdownMenuItem class="flex justify-between">
                   <span>Settings</span>
                   <span class="text-xs text-muted-foreground">G then S</span>
@@ -159,7 +159,7 @@
                 class="relative w-full h-auto px-2 py-1.5 text-muted-foreground text-xs"
               >
                 <div class="flex items-center gap-2">
-                  <Avatar>
+                  <Avatar class="w-6 h-6">
                     <AvatarImage
                       :src="
                         user?.imageUrl ||

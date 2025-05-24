@@ -43,6 +43,7 @@
     "embla-carousel-vue": "^8.6.0",
     "lucide-vue-next": "^0.511.0",
     "nuxt": "^3.17.3",
+    "nuxt-posthog": "^1.6.3",
     "pinia": "^3.0.2",
     "reka-ui": "^2.2.1",
     "resend": "^4.5.1",
