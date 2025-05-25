@@ -1,11 +1,9 @@
 <template>
   <Toaster />
   <NuxtLoadingIndicator />
-  <ClientOnly>
-    <NuxtLayout>
-      <NuxtPage />
-    </NuxtLayout>
-  </ClientOnly>
+  <NuxtLayout>
+    <NuxtPage />
+  </NuxtLayout>
 </template>
 
 <script setup lang="ts">

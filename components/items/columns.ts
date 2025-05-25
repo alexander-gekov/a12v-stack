@@ -64,7 +64,7 @@ export const columns: ColumnDef<Item>[] = [
                 ? "secondary"
                 : "outline",
         },
-        status
+        () => status
       );
     },
     filterFn: (row, id, value) => {

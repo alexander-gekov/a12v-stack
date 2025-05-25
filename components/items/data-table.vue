@@ -1,4 +1,4 @@
-<script setup lang="ts" generic="TData, TValue">
+<script setup lang="ts" generic="TData extends Item, TValue">
 import type { ColumnDef, SortingState } from "@tanstack/vue-table";
 import {
   FlexRender,
@@ -7,7 +7,29 @@ import {
   useVueTable,
 } from "@tanstack/vue-table";
 import { computed, ref, onBeforeUnmount } from "vue";
-
+import {
+  LayoutGrid,
+  LayoutList,
+  Settings2,
+  Filter,
+  ListFilter,
+  Search,
+  LucidePlus,
+} from "lucide-vue-next";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuCheckboxItem,
+} from "../../components/ui/dropdown-menu";
+import { Button } from "../../components/ui/button";
+import { Badge } from "../../components/ui/badge";
+import { Input } from "../../components/ui/input";
 import {
   Table,
   TableBody,
@@ -17,6 +39,21 @@ import {
   TableRow,
 } from "../../components/ui/table";
 import { valueUpdater } from "../../lib/utils";
+import BoardView from "./board-view.vue";
+import type { Item } from "../../types/item";
+
+const viewModeCookie = useCookie<"table" | "board">("items-view-mode", {
+  default: () => "table",
+  watch: true,
+  maxAge: 60 * 60 * 24 * 365, // 1 year
+});
+
+const viewMode = computed({
+  get: () => viewModeCookie.value,
+  set: (value: "table" | "board") => {
+    viewModeCookie.value = value;
+  },
+});
 
 const props = defineProps<{
   columns: ColumnDef<TData, TValue>[];
@@ -27,24 +64,45 @@ const tableState = ref();
 const sorting = ref<SortingState>([]);
 const rowSelection = ref({});
 
+const selectedStatuses = ref<string[]>([]);
+const statusOptions = [
+  { label: "Draft", value: "draft" },
+  { label: "Published", value: "published" },
+  { label: "Archived", value: "archived" },
+];
+
 const table = useVueTable({
-  columns: props.columns,
-  data: props.data,
+  get data() {
+    return props.data.value ?? [];
+  },
+  get columns() {
+    return props.columns;
+  },
   getCoreRowModel: getCoreRowModel(),
   getSortedRowModel: getSortedRowModel(),
   onSortingChange: (updaterOrValue) => valueUpdater(updaterOrValue, sorting),
   onRowSelectionChange: (updaterOrValue) =>
     valueUpdater(updaterOrValue, rowSelection),
+  filterFns: {
+    status: (row, columnId, filterValue: string[]) => {
+      if (!filterValue.length) return true;
+      return filterValue.includes(row.getValue(columnId));
+    },
+  },
   state: {
     get sorting() {
       return sorting.value;
     },
-
     get pagination() {
       return tableState.value?.pagination;
     },
     get rowSelection() {
       return rowSelection.value;
+    },
+    get columnFilters() {
+      return selectedStatuses.value.length
+        ? [{ id: "status", value: selectedStatuses.value }]
+        : [];
     },
   },
   initialState: {
@@ -59,60 +117,213 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div class="rounded-md">
-    <Table>
-      <TableHeader>
-        <TableRow
-          v-for="headerGroup in table?.getHeaderGroups()"
-          :key="headerGroup.id"
-        >
-          <TableHead
-            class="pl-4"
-            v-for="header in headerGroup.headers"
-            :key="header.id"
-            :style="{ width: `${header.getSize()}px` }"
+  <div>
+    <div class="flex h-10 items-center justify-between border-b px-4">
+      <div class="flex items-center gap-2">
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              variant="outline"
+              size="xs"
+              class="h-6 gap-1 text-muted-foreground hover:bg-muted"
+            >
+              <ListFilter class="h-3 w-3" />
+              Filter
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="start" class="w-60">
+            <div class="flex items-center px-2 py-2">
+              <Search class="mr-2 h-3 w-3 text-muted-foreground" />
+              <Input placeholder="Filter..." class="h-8 w-full" />
+            </div>
+            <DropdownMenuSeparator />
+            <DropdownMenuSub>
+              <DropdownMenuSubTrigger>
+                <div class="flex items-center">
+                  Status
+                  <Badge
+                    v-if="selectedStatuses.length"
+                    variant="secondary"
+                    class="ml-2"
+                  >
+                    {{ selectedStatuses.length }}
+                  </Badge>
+                </div>
+              </DropdownMenuSubTrigger>
+              <DropdownMenuSubContent class="w-48">
+                <DropdownMenuCheckboxItem
+                  v-for="status in statusOptions"
+                  :key="status.value"
+                  :model-value="selectedStatuses.includes(status.value)"
+                  @update:model-value="
+                    (checked) => {
+                      if (checked) {
+                        selectedStatuses.push(status.value);
+                      } else {
+                        selectedStatuses = selectedStatuses.filter(
+                          (s) => s !== status.value
+                        );
+                      }
+                    }
+                  "
+                >
+                  <Badge
+                    :variant="
+                      status.value === 'published'
+                        ? 'default'
+                        : status.value === 'draft'
+                          ? 'secondary'
+                          : 'outline'
+                    "
+                    class="mr-2"
+                  >
+                    {{ status.label }}
+                  </Badge>
+                  <span class="ml-auto text-xs">{{
+                    props.data.value.filter(
+                      (item) => item.status === status.value
+                    ).length
+                  }}</span>
+                </DropdownMenuCheckboxItem>
+              </DropdownMenuSubContent>
+            </DropdownMenuSub>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button
+            variant="outline"
+            size="xs"
+            class="h-6 gap-1 text-muted-foreground hover:bg-muted"
           >
-            <FlexRender
-              v-if="!header.isPlaceholder"
-              :render="header.column.columnDef.header"
-              :props="header.getContext()"
-            />
-          </TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        <template v-if="table?.getRowModel().rows?.length">
+            <Settings2 class="h-3 w-3" />
+            Display
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end" class="w-48">
+          <DropdownMenuLabel>View Mode</DropdownMenuLabel>
+          <DropdownMenuItem
+            :class="{ 'bg-muted': viewMode === 'table' }"
+            @click="viewMode = 'table'"
+          >
+            <LayoutList class="h-4 w-4 mr-2" />
+            List View
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            :class="{ 'bg-muted': viewMode === 'board' }"
+            @click="viewMode = 'board'"
+          >
+            <LayoutGrid class="h-4 w-4 mr-2" />
+            Board View
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuLabel>Column Settings</DropdownMenuLabel>
+          <DropdownMenuSub>
+            <DropdownMenuSubTrigger>
+              <span>Order by</span>
+            </DropdownMenuSubTrigger>
+            <DropdownMenuSubContent>
+              <DropdownMenuItem
+                @click="sorting = [{ id: 'name', desc: false }]"
+              >
+                Name
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                @click="sorting = [{ id: 'status', desc: false }]"
+              >
+                Status
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                @click="sorting = [{ id: 'createdAt', desc: true }]"
+              >
+                Created Date
+              </DropdownMenuItem>
+            </DropdownMenuSubContent>
+          </DropdownMenuSub>
+          <DropdownMenuSub>
+            <DropdownMenuSubTrigger>
+              <span>Show Columns</span>
+            </DropdownMenuSubTrigger>
+            <DropdownMenuSubContent>
+              <DropdownMenuCheckboxItem
+                v-for="column in table
+                  .getAllColumns()
+                  .filter((col) => col.getCanHide())"
+                :key="column.id"
+                :model-value="column.getIsVisible()"
+                @update:model-value="column.toggleVisibility()"
+              >
+                {{ column.id.charAt(0).toUpperCase() + column.id.slice(1) }}
+              </DropdownMenuCheckboxItem>
+            </DropdownMenuSubContent>
+          </DropdownMenuSub>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </div>
+
+    <BoardView
+      v-if="viewMode === 'board'"
+      :data="ref(table.getFilteredRowModel().rows.map((row) => row.original))"
+      :is-pending="false"
+    />
+
+    <div v-else class="rounded-md">
+      <Table>
+        <TableHeader>
           <TableRow
-            v-for="row in table.getRowModel().rows"
-            :key="row.id"
-            :data-state="row.getIsSelected() ? 'selected' : undefined"
+            v-for="headerGroup in table?.getHeaderGroups()"
+            :key="headerGroup.id"
           >
-            <TableCell
+            <TableHead
               class="pl-4"
-              v-for="cell in row.getVisibleCells()"
-              :key="cell.id"
+              v-for="header in headerGroup.headers"
+              :key="header.id"
+              :style="{ width: `${header.getSize()}px` }"
             >
               <FlexRender
-                :render="cell.column.columnDef.cell"
-                :props="cell.getContext()"
+                v-if="!header.isPlaceholder"
+                :render="header.column.columnDef.header"
+                :props="header.getContext()"
               />
-            </TableCell>
+            </TableHead>
           </TableRow>
-          <slot name="new-row" :columns="columns" />
-          <TableRow>
-            <TableCell :colspan="columns.length" class="h-8 p-0">
-              <slot name="add-button" />
-            </TableCell>
-          </TableRow>
-        </template>
-        <template v-else>
-          <TableRow>
-            <TableCell :colspan="columns.length" class="h-24 text-center">
-              No results.
-            </TableCell>
-          </TableRow>
-        </template>
-      </TableBody>
-    </Table>
+        </TableHeader>
+        <TableBody>
+          <template v-if="table?.getFilteredRowModel().rows?.length">
+            <TableRow
+              v-for="row in table.getFilteredRowModel().rows"
+              :key="row.id"
+              :data-state="row.getIsSelected() ? 'selected' : undefined"
+            >
+              <TableCell
+                class="pl-4"
+                v-for="cell in row.getVisibleCells()"
+                :key="cell.id"
+              >
+                <FlexRender
+                  :render="cell.column.columnDef.cell"
+                  :props="cell.getContext()"
+                />
+              </TableCell>
+            </TableRow>
+            <slot name="new-row" :columns="columns" />
+            <TableRow>
+              <TableCell :colspan="columns.length" class="h-8 p-0">
+                <slot name="add-button" />
+              </TableCell>
+            </TableRow>
+          </template>
+          <template v-else>
+            <TableRow>
+              <TableCell :colspan="columns.length" class="h-24 text-center">
+                No results.
+              </TableCell>
+            </TableRow>
+          </template>
+        </TableBody>
+      </Table>
+    </div>
   </div>
 </template>

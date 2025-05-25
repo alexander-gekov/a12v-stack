@@ -45,9 +45,9 @@ onBeforeUnmount(() => {
   <div>
     <DataTable
       :columns="columns"
-      :key="data?.items?.length"
       :data="ref(data?.items ?? [])"
       :is-pending="isLoading || isPending"
+      :key="`items-${isLoading || isPending}`"
       class="rounded-none"
     >
       <template #add-button>

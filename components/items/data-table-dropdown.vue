@@ -9,6 +9,23 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
+import { useItemsQuery } from "../../composables/useItemsQuery";
+import { toast } from "vue-sonner";
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogCancel,
+  AlertDialogAction,
+  AlertDialogTrigger,
+} from "../ui/alert-dialog";
+import { useQueryClient } from "@tanstack/vue-query";
+
+const { deleteItem } = useItemsQuery();
+const queryClient = useQueryClient();
 
 defineProps<{
   item: {
@@ -16,8 +33,23 @@ defineProps<{
   };
 }>();
 
+const isDeleting = ref(false);
+
 function copy(id: string) {
   navigator.clipboard.writeText(id);
+}
+
+async function handleDelete(id: string) {
+  try {
+    isDeleting.value = true;
+    await deleteItem(id);
+    queryClient.invalidateQueries({ queryKey: ["items"] });
+    toast("Item deleted successfully");
+  } catch (error) {
+    toast("Failed to delete item");
+  } finally {
+    isDeleting.value = false;
+  }
 }
 </script>
 
@@ -35,7 +67,29 @@ function copy(id: string) {
       <DropdownMenuSeparator />
       <DropdownMenuItem>View item</DropdownMenuItem>
       <DropdownMenuItem>Edit item</DropdownMenuItem>
-      <DropdownMenuItem>Delete item</DropdownMenuItem>
+      <DropdownMenuItem @click="handleDelete(item.id)" :disabled="isDeleting">
+        <AlertDialog>
+          <AlertDialogTrigger as-child> Delete item </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+              <AlertDialogDescription>
+                This action cannot be undone. This will permanently delete the
+                item.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction
+                @click="handleDelete(item.id)"
+                :disabled="isDeleting"
+              >
+                {{ isDeleting ? "Deleting..." : "Delete" }}
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      </DropdownMenuItem>
     </DropdownMenuContent>
   </DropdownMenu>
 </template>

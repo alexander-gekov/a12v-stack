@@ -17,29 +17,33 @@ interface ItemsQueryParams {
 }
 
 export const useItemsQuery = (params: ItemsQueryParams = {}) => {
-  const queryKey = ["items", params] as const;
+  const fetchItems = async () => {
+    const searchParams = new URLSearchParams();
+
+    if (params.name) searchParams.set("name", params.name);
+    if (params.status) {
+      if (Array.isArray(params.status)) {
+        params.status.forEach((s) => searchParams.append("status", s));
+      } else {
+        searchParams.set("status", params.status);
+      }
+    }
+    if (params.sortBy) searchParams.set("sortBy", params.sortBy);
+    if (params.sortOrder) searchParams.set("sortOrder", params.sortOrder);
+    if (params.page) searchParams.set("page", params.page.toString());
+    if (params.pageSize)
+      searchParams.set("pageSize", params.pageSize.toString());
+
+    const result = await $fetch<ItemsResponse>(
+      `/api/items${searchParams.toString() ? `?${searchParams.toString()}` : ""}`
+    );
+    return result;
+  };
 
   const itemsQuery = useQuery({
-    queryKey,
-    queryFn: () => {
-      const searchParams = new URLSearchParams();
-
-      if (params.name) searchParams.set("name", params.name);
-      if (params.status) {
-        if (Array.isArray(params.status)) {
-          params.status.forEach((s) => searchParams.append("status", s));
-        } else {
-          searchParams.set("status", params.status);
-        }
-      }
-      if (params.sortBy) searchParams.set("sortBy", params.sortBy);
-      if (params.sortOrder) searchParams.set("sortOrder", params.sortOrder);
-      if (params.page) searchParams.set("page", params.page.toString());
-      if (params.pageSize)
-        searchParams.set("pageSize", params.pageSize.toString());
-
-      return $fetch<ItemsResponse>(`/api/items?${searchParams.toString()}`);
-    },
+    queryKey: ["items", params],
+    queryFn: fetchItems,
+    enabled: true,
     refetchOnWindowFocus: true,
     refetchOnMount: true,
   });
