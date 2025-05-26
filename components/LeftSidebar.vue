@@ -75,17 +75,18 @@
           >
             <NuxtLink :to="item.link">
               <SidebarMenuButton
-                class="w-full text-muted-foreground hover:text-foreground transition-colors group"
+                class="w-full text-muted-foreground hover:text-foreground transition-colors group font-medium"
                 :class="
                   currentRoute.path == item.link
                     ? 'bg-sidebar-hover !text-foreground'
                     : ''
                 "
                 :tooltip="item.title"
+                size="sm"
               >
                 <component
                   :is="item.icon"
-                  class="mr-2 h-4 w-4 transition-colors"
+                  class="mr-2 h-6 w-6 transition-colors"
                 />
                 <span>{{ item.title }}</span>
               </SidebarMenuButton>
@@ -111,17 +112,18 @@
               >
                 <NuxtLink :to="item.link" target="_blank">
                   <SidebarMenuButton
-                    class="w-full text-muted-foreground hover:text-foreground transition-colors"
+                    class="w-full text-muted-foreground hover:text-foreground transition-colors font-medium text-xs"
                     :class="
                       currentRoute.path == item.link
                         ? 'bg-sidebar-hover !text-foreground'
                         : ''
                     "
                     :tooltip="item.title"
+                    size="sm"
                   >
                     <component
                       :is="item.icon"
-                      class="mr-2 h-4 w-4 transition-colors"
+                      class="mr-2 h-6 w-6 transition-colors"
                     />
                     <span>{{ item.title }}</span>
                   </SidebarMenuButton>

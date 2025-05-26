@@ -40,6 +40,12 @@ export default defineNuxtConfig({
     "nuxt-lucide-icons",
   ],
 
+  fonts: {
+    defaults: {
+      weights: [400, 500, 600, 700],
+    },
+  },
+
   colorMode: {
     classSuffix: "",
     fallback: "light",

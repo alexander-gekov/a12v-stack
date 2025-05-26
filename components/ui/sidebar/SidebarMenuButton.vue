@@ -4,7 +4,7 @@ import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from "~~/components/ui/tooltip";
+} from "../../../components/ui/tooltip";
 import SidebarMenuButtonChild, {
   type SidebarMenuButtonProps,
 } from "./SidebarMenuButtonChild.vue";

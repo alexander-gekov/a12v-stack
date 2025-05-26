@@ -10,9 +10,9 @@ import { Checkbox } from "../ui/checkbox";
 export const columns: ColumnDef<Item>[] = [
   {
     id: "select",
-    size: 50,
-    minSize: 50,
-    maxSize: 50,
+    size: 20,
+    minSize: 20,
+    maxSize: 20,
     header: ({ table }) =>
       h(Checkbox, {
         modelValue: table.getIsAllPageRowsSelected(),
