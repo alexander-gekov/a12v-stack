@@ -8,7 +8,12 @@
             <main class="flex flex-col w-full h-screen justify-between">
               <div class="flex flex-col page-wrap">
                 <NavBar />
-                <div :class="'xl:max-w-6xl mx-auto w-full px-6'">
+                <div
+                  :class="[
+                    'mx-auto w-full',
+                    isPadded ? 'xl:max-w-6xl px-6' : '',
+                  ]"
+                >
                   <NuxtPage />
                 </div>
               </div>
@@ -37,6 +42,10 @@ watch(
     }
   }
 );
+
+const route = useRoute();
+const paddedRoutes = ["index", "about", "chat", "settings"];
+const isPadded = computed(() => paddedRoutes.includes(route.name as string));
 </script>
 
 <style scoped></style>

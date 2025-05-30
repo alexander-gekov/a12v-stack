@@ -4,7 +4,7 @@ import { columns } from "../components/items/columns";
 
 definePageMeta({
   title: "Items",
-  layout: "max-width",
+  layout: "default",
 });
 
 const { data, isLoading, createItem, isPending, refetch } = useItemsQuery();
