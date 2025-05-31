@@ -1,0 +1,158 @@
+# Overview
+The Items Table UX Overhaul project aims to create a best-in-class, intuitive table interface inspired by modern tools like Linear and Attio. The focus is on delivering a fluid, powerful experience that caters to both power users and casual users through advanced features like mass selection, bulk actions, inline editing, and contextual menus.
+
+# Core Features
+
+## 1. Table Base Functionality
+### Implementation Details
+- Integration with TanStack Table for Vue as the core table engine
+- Implementation of header functionality:
+  - Sorting (ascending/descending/reset)
+  - Column pinning (left/right)
+  - Column resizing
+  - Column visibility toggles
+  - Drag to reorder columns (if supported by TanStack)
+- Row management:
+  - Virtualized rendering for large datasets
+  - Inline editing for supported fields
+  - Sticky "New Item" row at the bottom
+
+## 2. Selection & Bulk Actions
+### Implementation Details
+- Selection mechanisms:
+  - Checkbox in first column
+  - Shift + Click for range selection
+  - Cmd/Ctrl + Click for individual toggles
+  - "Select All" for current page
+  - "Select All Matching" across all pages
+- Bulk action functionality:
+  - Delete multiple items
+  - Archive multiple items
+  - Status changes (draft/published/archived)
+  - Field editing for supported fields
+
+## 3. Context Menu
+### Implementation Details
+- Row context menu (right-click/3-dot):
+  - Open item detail
+  - Edit item
+  - Duplicate item
+  - Archive item
+  - Delete item
+- Blank space context menu:
+  - Create new item
+  - Paste item functionality
+
+## 4. Filtering & Search
+### Implementation Details
+- Filter panel with:
+  - Full-text search across fields
+  - Status filter (Draft/Published/Archived)
+  - Additional filters:
+    - Created date
+    - Last updated
+    - Tag
+    - Owner
+- Removable filter chips above table
+
+## 5. Sorting Capabilities
+### Implementation Details
+- Single column sorting via header click
+- Multi-column sorting with Shift + Click
+- Visual sort priority indicators
+- Sort state persistence
+
+## 6. View Management
+### Implementation Details
+- Table/Board view toggle
+- View preference persistence
+- Board view implementation with status columns
+- Smooth transitions between views
+
+## 7. Inline Item Creation
+### Implementation Details
+- Sticky new item row
+- Auto-focus functionality
+- Create on blur/Enter
+- Smooth row insertion animation
+
+## 8. Performance Optimization
+### Implementation Details
+- Virtualized list implementation
+- Debounced search/filter operations
+- Optimistic UI updates
+- Loading state management
+
+## 9. Responsive Design
+### Implementation Details
+- Mobile-friendly layout
+- Collapsible filter panel
+- Adaptive column management
+- Mobile-optimized board view
+
+## 10. Accessibility Features
+### Implementation Details
+- Keyboard navigation
+- Focus management
+- ARIA label implementation
+- Tab order optimization
+
+# Technical Architecture
+- Vue 3 + Nuxt + TypeScript as the core stack
+- TanStack Table for Vue for table functionality
+- TanStack Query for data fetching (useItemsQuery composable)
+- Local storage/user settings for preference persistence
+- CSS transitions/animations for smooth UX
+
+# Development Roadmap
+
+## Phase 1: Foundation
+- Basic table setup with TanStack Table
+- Core data fetching with TanStack Query
+- Basic row/column management
+- Essential sorting/filtering
+
+## Phase 2: Enhanced Functionality
+- Selection mechanisms
+- Bulk actions
+- Context menus
+- Advanced filtering
+
+## Phase 3: Views & Creation
+- Board view implementation
+- Inline item creation
+- View persistence
+- Transitions/animations
+
+## Phase 4: Polish & Performance
+- Virtualization
+- Performance optimization
+- Mobile responsiveness
+- Accessibility implementation
+
+# Logical Dependency Chain
+1. Core table setup and data fetching
+2. Basic row/column functionality
+3. Selection and bulk actions
+4. Context menus and filtering
+5. View management and creation
+6. Performance and accessibility
+
+# Risks and Mitigations
+## Technical Challenges
+- Performance with large datasets: Mitigate with virtualization
+- Complex state management: Use composables effectively
+- Mobile responsiveness: Design mobile-first
+- Browser compatibility: Regular testing
+
+## Resource Optimization
+- Prioritize core functionality first
+- Implement advanced features incrementally
+- Focus on user-facing features early
+- Regular performance monitoring
+
+# Success Metrics
+- Smooth performance with 1000+ items
+- Sub-200ms response for common actions
+- Full keyboard accessibility
+- Mobile usability score > 90 

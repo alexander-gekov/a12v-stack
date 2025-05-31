@@ -204,20 +204,24 @@ onBeforeUnmount(() => {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" class="w-48">
           <DropdownMenuLabel>View Mode</DropdownMenuLabel>
-          <DropdownMenuItem
-            :class="{ 'bg-muted': viewMode === 'table' }"
-            @click="viewMode = 'table'"
-          >
-            <LayoutList class="h-4 w-4 mr-2" />
-            List View
-          </DropdownMenuItem>
-          <DropdownMenuItem
-            :class="{ 'bg-muted': viewMode === 'board' }"
-            @click="viewMode = 'board'"
-          >
-            <LayoutGrid class="h-4 w-4 mr-2" />
-            Board View
-          </DropdownMenuItem>
+          <div class="flex gap-2 p-2">
+            <DropdownMenuItem
+              class="flex-1 h-12 justify-center items-center flex-col gap-0.5 border rounded-md hover:bg-muted"
+              :class="{ 'bg-muted': viewMode === 'table' }"
+              @click="viewMode = 'table'"
+            >
+              <LayoutList class="h-4 w-4 mt-0.5" />
+              <span class="text-sm">List</span>
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              class="flex-1 h-12 justify-center items-center flex-col gap-1 border rounded-md hover:bg-muted"
+              :class="{ 'bg-muted': viewMode === 'board' }"
+              @click="viewMode = 'board'"
+            >
+              <LayoutGrid class="h-4 w-4 mt-0.5" />
+              <span class="text-sm">Board</span>
+            </DropdownMenuItem>
+          </div>
           <DropdownMenuSeparator />
           <DropdownMenuLabel>Column Settings</DropdownMenuLabel>
           <DropdownMenuSub>
