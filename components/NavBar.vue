@@ -37,12 +37,6 @@
             />
           </div>
 
-          <NuxtLink :to="supportLink" class="flex items-center">
-            <Button variant="ghost" size="xs" class="text-muted-foreground h-8">
-              <LucideHelpCircle class="h-5 w-5" />
-            </Button>
-          </NuxtLink>
-
           <DropdownMenu>
             <DropdownMenuTrigger as-child>
               <Button
@@ -129,8 +123,6 @@ const colorMode = useColorMode();
 const isLargeScreen = useMediaQuery("(min-width: 800px)");
 
 const isDark = computed(() => colorMode.preference === "dark");
-
-const supportLink = ref("/about");
 </script>
 
 <style></style>
