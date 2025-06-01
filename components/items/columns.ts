@@ -1,4 +1,4 @@
-import type { ColumnDef } from "@tanstack/vue-table";
+import type { ColumnDef, FilterFnOption } from "@tanstack/vue-table";
 import type { Item } from "../../types/item";
 import { h } from "vue";
 import DataTableDropdown from "./data-table-dropdown.vue";
@@ -6,6 +6,40 @@ import { ArrowUpDown } from "lucide-vue-next";
 import { Button } from "../ui/button";
 import Badge from "../ui/badge/Badge.vue";
 import { Checkbox } from "../ui/checkbox";
+
+const dateBetweenFn: FilterFnOption<Item> = (
+  row,
+  columnId,
+  filterValue: { start?: string; end?: string }
+) => {
+  if (!filterValue?.start && !filterValue?.end) return true;
+
+  const cellDate = new Date(row.getValue(columnId));
+
+  if (filterValue.start && filterValue.end) {
+    const start = new Date(filterValue.start);
+    start.setHours(0, 0, 0, 0);
+
+    const end = new Date(filterValue.end);
+    end.setHours(23, 59, 59, 999);
+
+    return cellDate >= start && cellDate <= end;
+  }
+
+  if (filterValue.start) {
+    const start = new Date(filterValue.start);
+    start.setHours(0, 0, 0, 0);
+    return cellDate >= start;
+  }
+
+  if (filterValue.end) {
+    const end = new Date(filterValue.end);
+    end.setHours(23, 59, 59, 999);
+    return cellDate <= end;
+  }
+
+  return true;
+};
 
 export const columns: ColumnDef<Item>[] = [
   {
@@ -29,6 +63,7 @@ export const columns: ColumnDef<Item>[] = [
       }),
     enableSorting: false,
     enableHiding: false,
+    enableColumnFilter: false,
   },
   {
     enableResizing: true,
@@ -38,6 +73,8 @@ export const columns: ColumnDef<Item>[] = [
     maxSize: 500,
     header: "Name",
     cell: ({ row }) => row.getValue("name"),
+    enableColumnFilter: true,
+    filterFn: "includesString",
   },
   {
     enableResizing: true,
@@ -47,6 +84,8 @@ export const columns: ColumnDef<Item>[] = [
     accessorKey: "description",
     header: "Description",
     cell: ({ row }) => row.getValue("description"),
+    enableColumnFilter: true,
+    filterFn: "includesString",
   },
   {
     accessorKey: "status",
@@ -67,6 +106,7 @@ export const columns: ColumnDef<Item>[] = [
         () => status
       );
     },
+    enableColumnFilter: true,
     filterFn: (row, id, value) => {
       return value.includes(row.getValue(id));
     },
@@ -86,10 +126,13 @@ export const columns: ColumnDef<Item>[] = [
     },
     cell: ({ row }) => formatDate(row.getValue("createdAt")),
     sortingFn: "datetime",
+    enableColumnFilter: true,
+    filterFn: dateBetweenFn,
   },
   {
     id: "actions",
     enableHiding: false,
+    enableColumnFilter: false,
     cell: ({ row }) => {
       const item = row.original;
 

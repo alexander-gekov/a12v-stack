@@ -5,6 +5,7 @@ import {
   getCoreRowModel,
   getSortedRowModel,
   useVueTable,
+  getFilteredRowModel,
 } from "@tanstack/vue-table";
 import { computed, ref, onBeforeUnmount } from "vue";
 import {
@@ -41,6 +42,8 @@ import {
 import { valueUpdater } from "../../lib/utils";
 import BoardView from "./board-view.vue";
 import type { Item } from "../../types/item";
+import ColumnFilter from "./column-filter.vue";
+import { useFiltersStore } from "../../stores/filters";
 
 const viewModeCookie = useCookie<"table" | "board">("items-view-mode", {
   default: () => "table",
@@ -64,12 +67,15 @@ const tableState = ref();
 const sorting = ref<SortingState>([]);
 const rowSelection = ref({});
 
-const selectedStatuses = ref<string[]>([]);
+const filtersStore = useFiltersStore();
+
 const statusOptions = [
   { label: "Draft", value: "draft" },
   { label: "Published", value: "published" },
   { label: "Archived", value: "archived" },
 ];
+
+const columnFilters = ref([]);
 
 const table = useVueTable({
   get data() {
@@ -80,13 +86,31 @@ const table = useVueTable({
   },
   getCoreRowModel: getCoreRowModel(),
   getSortedRowModel: getSortedRowModel(),
+  getFilteredRowModel: getFilteredRowModel(),
   onSortingChange: (updaterOrValue) => valueUpdater(updaterOrValue, sorting),
   onRowSelectionChange: (updaterOrValue) =>
     valueUpdater(updaterOrValue, rowSelection),
+  onColumnFiltersChange: (updaterOrValue) =>
+    valueUpdater(updaterOrValue, columnFilters),
   filterFns: {
     status: (row, columnId, filterValue: string[]) => {
       if (!filterValue.length) return true;
       return filterValue.includes(row.getValue(columnId));
+    },
+    dateBetween: (row, columnId, filterValue: { start?: Date; end?: Date }) => {
+      const cellValue = row.getValue<Date>(columnId);
+      const start = filterValue.start ? new Date(filterValue.start) : null;
+      const end = filterValue.end ? new Date(filterValue.end) : null;
+
+      if (start && end) {
+        return cellValue >= start && cellValue <= end;
+      } else if (start) {
+        return cellValue >= start;
+      } else if (end) {
+        return cellValue <= end;
+      }
+
+      return true;
     },
   },
   state: {
@@ -100,14 +124,13 @@ const table = useVueTable({
       return rowSelection.value;
     },
     get columnFilters() {
-      return selectedStatuses.value.length
-        ? [{ id: "status", value: selectedStatuses.value }]
-        : [];
+      return columnFilters.value;
     },
   },
   initialState: {
     expanded: true,
     sorting: [{ id: "created", desc: false }],
+    columnFilters: [],
   },
 });
 
@@ -129,24 +152,27 @@ onBeforeUnmount(() => {
             >
               <ListFilter class="h-3 w-3" />
               Filter
+              <Badge
+                v-if="table.getState().columnFilters.length"
+                variant="secondary"
+                class="ml-2"
+              >
+                {{ table.getState().columnFilters.length }}
+              </Badge>
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="start" class="w-60">
-            <div class="flex items-center px-2 py-2">
-              <Search class="mr-2 h-3 w-3 text-muted-foreground" />
-              <Input placeholder="Filter..." class="h-8 w-full" />
-            </div>
-            <DropdownMenuSeparator />
+          <DropdownMenuContent align="start" class="w-[280px]">
             <DropdownMenuSub>
               <DropdownMenuSubTrigger>
                 <div class="flex items-center">
                   Status
                   <Badge
-                    v-if="selectedStatuses.length"
+                    v-if="filtersStore.statusFilter.length"
                     variant="secondary"
+                    size="xs"
                     class="ml-2"
                   >
-                    {{ selectedStatuses.length }}
+                    {{ filtersStore.statusFilter.length }}
                   </Badge>
                 </div>
               </DropdownMenuSubTrigger>
@@ -154,16 +180,26 @@ onBeforeUnmount(() => {
                 <DropdownMenuCheckboxItem
                   v-for="status in statusOptions"
                   :key="status.value"
-                  :model-value="selectedStatuses.includes(status.value)"
+                  :model-value="
+                    filtersStore.statusFilter.includes(status.value)
+                  "
                   @update:model-value="
                     (checked) => {
                       if (checked) {
-                        selectedStatuses.push(status.value);
+                        filtersStore.setStatusFilter([
+                          ...filtersStore.statusFilter,
+                          status.value,
+                        ]);
                       } else {
-                        selectedStatuses = selectedStatuses.filter(
-                          (s) => s !== status.value
+                        filtersStore.setStatusFilter(
+                          filtersStore.statusFilter.filter(
+                            (s) => s !== status.value
+                          )
                         );
                       }
+                      table
+                        .getColumn('status')
+                        ?.setFilterValue(filtersStore.statusFilter);
                     }
                   "
                 >
@@ -187,6 +223,27 @@ onBeforeUnmount(() => {
                 </DropdownMenuCheckboxItem>
               </DropdownMenuSubContent>
             </DropdownMenuSub>
+            <DropdownMenuSeparator />
+            <ColumnFilter
+              v-for="column in table
+                .getAllColumns()
+                .filter((column) => column.getCanFilter())"
+              :key="column.id"
+              :column="column"
+            />
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              v-if="table.getState().columnFilters.length"
+              @click="
+                () => {
+                  filtersStore.clearAllFilters();
+                  table.resetColumnFilters();
+                }
+              "
+              class="justify-center text-sm"
+            >
+              Reset filters
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
