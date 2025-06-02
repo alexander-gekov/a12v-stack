@@ -369,12 +369,6 @@ onBeforeUnmount(() => {
                 />
               </TableCell>
             </TableRow>
-            <slot name="new-row" :columns="columns" />
-            <TableRow>
-              <TableCell :colspan="columns.length" class="h-8 p-0">
-                <slot name="add-button" />
-              </TableCell>
-            </TableRow>
           </template>
           <template v-else>
             <TableRow>
@@ -383,6 +377,12 @@ onBeforeUnmount(() => {
               </TableCell>
             </TableRow>
           </template>
+          <slot name="new-row" :columns="columns" />
+          <TableRow>
+            <TableCell :colspan="columns.length" class="h-8 p-0">
+              <slot name="add-button" />
+            </TableCell>
+          </TableRow>
         </TableBody>
       </Table>
     </div>
